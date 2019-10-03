@@ -23,6 +23,7 @@ main PROC
     call CrLf
 
     ; ++++++++
+    ; Intercambiar 'como' y 'Hola' de lugar
     mov EBX, DWORD PTR texto+3
     xchg EBX, DWORD PTR texto+8
     mov DWORD PTR texto+3, EBX

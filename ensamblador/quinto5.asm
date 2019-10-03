@@ -23,7 +23,12 @@ main PROC
     call CrLf
 
     ; ++++++++
-    
+    mov EBX, DWORD PTR texto+3
+    xchg EBX, DWORD PTR texto+8
+    mov DWORD PTR texto+3, EBX
+    call WriteString
+    call CrLf
+
     ; ++++++++++++
 
     mov EDX, OFFSET adios        ; despliega "ADIOS"

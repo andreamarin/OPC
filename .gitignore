@@ -4,3 +4,6 @@
 
 #zip files
 *.zip
+
+#MacOS
+.DS_Store

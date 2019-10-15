@@ -1,0 +1,3 @@
+[submodule "TareasOPC"]
+	path = TareasOPC
+	url = https://github.com/flandalanda/TareasOPC.git

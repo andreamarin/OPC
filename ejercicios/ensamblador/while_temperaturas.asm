@@ -20,8 +20,8 @@ impri01 BYTE "Temperatura [", mnul
 impri02 BYTE "La mayor temperatura fue: ", mnul
 impri03 BYTE "En la posicion: ", mnul
 Adios BYTE mcr, mlf, "ADIOS.", mcr, mlf, mnul
-N SDWORD ?
-I SDWORD ?
+N DWORD ?
+I DWORD ?
 Mayor SDWORD -10000
 
 ; Variables
@@ -57,6 +57,7 @@ main PROC
           inc EBX
       .ENDW
 
+      ; Imprimir resultado
       mov edx,OFFSET impri02
     	call WriteString
       mov EAX, Mayor

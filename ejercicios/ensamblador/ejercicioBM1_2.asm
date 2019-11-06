@@ -12,7 +12,7 @@ INCLUDELIB \masm32\Irvine\Kernel32.lib
 .DATA
 
 N DWORD ?
-textoLec BYTE "Ingrese un número de temperaturas a leer entre 1 y 10",0
+textoLec BYTE "Ingrese un nï¿½mero de temperaturas a leer entre 1 y 10",0
 textoError1 BYTE "Error por N < 1 o N > 10",0
 
 textoLectura1 BYTE "Teclee la ",0
@@ -45,13 +45,13 @@ main PROC
 
     MOV ESI, OFFSET temperaturas               ; Ubicamos en ESI el lugar de memoria del arreglo de temperaturas
     
-    MOV EDX, OFFSET textoLec                   ; Leemos el número de temperaturas que se van a ingresar
+    MOV EDX, OFFSET textoLec                   ; Leemos el nï¿½mero de temperaturas que se van a ingresar
     CALL WriteString
     CALL CrLf
     CALL ReadInt
     
     MOV N, EAX                                 ; Almacenamos el total de temperaturas a leer
-    .IF N < 1 || N > 10                        ; Si el número de temperaturas es menor a 1 o mayor
+    .IF N < 1 || N > 10                        ; Si el nï¿½mero de temperaturas es menor a 1 o mayor
         MOV EDX, OFFSET textoError1            ; a 10 se emite un error
         CALL WriteString
         CALL CrLf
@@ -68,10 +68,10 @@ main PROC
             CALL CrLf
 
             MOV [ESI], EAX                     ; Almacenamos la temperatura en el arreglo de temperaturas
-            ADD ESI, TYPE temperaturas         ; Incrementamos la dirección de memoria almacenada en ESI por 4
+            ADD ESI, TYPE temperaturas         ; Incrementamos la direcciï¿½n de memoria almacenada en ESI por 4
 
-            .IF EAX < min                      ; Si la temperatura ingresada es menor a la temperatura mínima
-                MOV min, EAX                   ; se almacena como la nueva temperatura mínima
+            .IF EAX < min                      ; Si la temperatura ingresada es menor a la temperatura mï¿½nima
+                MOV min, EAX                   ; se almacena como la nueva temperatura mï¿½nima
                 MOV pos, EBX
             .ENDIF
             INC EBX                            ; Se incrementa el contador
@@ -112,7 +112,7 @@ main PROC
             MOV EAX, SDWORD PTR [ESI]
             CALL WriteInt
             
-            ADD ESI, TYPE temperaturas         ; Decrementamos la dirección de memoria contenida en ESI
+            ADD ESI, TYPE temperaturas         ; Decrementamos la direcciï¿½n de memoria contenida en ESI
             INC EBX                            ; Decrementamos el contador
     
             CALL CrLf
@@ -128,10 +128,13 @@ main PROC
     MOV EDX, OFFSET adios
     CALL WriteString
 
-    exit
+    EXIT
 
-    ; Procedimiento Seleccion Directa 
-    VecSelDir PROC
+; Termina el procedimiento principal
+main ENDP
+
+; Procedimiento Seleccion Directa 
+VecSelDir PROC
         POP dirRet
         POP ESI                                ; direccion de memoria del arreglo
         POP typeArr                            ; tipo
@@ -187,9 +190,7 @@ main PROC
         PUSH dirRet
 
         RET
-    VecSelDir ENDP
-main ENDP
-; Termina el procedimiento principal
+VecSelDir ENDP
 
 ; Termina el area de Ensamble
 END main

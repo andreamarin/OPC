@@ -1,4 +1,4 @@
-TITLE Ejercicio BM 1
+TITLE Ejercicio BM2 1
 
 ; Irvine libraries
 INCLUDE \masm32\Irvine\Irvine32.inc
@@ -60,23 +60,23 @@ sumaMulti PROC
 
     POP dirRet          ; obtenemos parámetros
     POP lenArr              
-    POP a1
-    POP a2
+    POP ESI
+    POP EDI
     
-    MOV ESI, 0          ; contador
+    MOV EBX, 0          ; contador
     MOV ECX, 0          ; total
     MOV EDX, 0          ; resultado multiplicacion
 
-    .WHILE ESI < lenArr
+    .WHILE EBX < lenArr
 
-        MOV EAX, a1[ESI*TYPE a1]    ; imprimir calculo
+        MOV EAX, SDWORD PTR [ESI]    ; imprimir calculo
         CALL WriteInt               
         MOV EDX, OFFSET txtCalc1
         CALL WriteString
-        MOV EAX, a2[ESI*TYPE a2]
+        MOV EAX, SDWORD PTR [EDI]
         CALL WriteInt
 
-        IMUL EAX, a1[ESI*TYPE a1]   ; a2[ESI] * a1[ESI]
+        IMUL EAX, SDWORD PTR [ESI]   ; a2 * a1
 
         MOV EDX, OFFSET txtCalc2
         CALL WriteString
@@ -85,7 +85,10 @@ sumaMulti PROC
 
 
         ADD ECX, EAX                ; guardar suma
-        INC ESI                     ; aumenta contador
+
+        ADD ESI, 4
+        ADD EDI, 4
+        INC EBX                     ; aumenta contador
     .ENDW
 
     PUSH ECX                        ; devolver resultado

@@ -15,7 +15,7 @@ texto   BYTE "El coronel no tiene "
 conul   BYTE "enur"             ; caracteres a contabilizar
 acont   DWORD 4 DUP (0)         ; total de cada carácter
 
-len     DWORD, ?
+len     DWORD ?
 adios   BYTE "ADIOS", 0
 
 ; totalCaracteres variables locales
@@ -79,28 +79,31 @@ totalCaracteres PROC
     ; Regresa
     ;     Stack: total de caracteres
 
-    POP dirRet          ; obtenemos parámetros
+    POP dirRet1          ; obtenemos parámetros
     POP cadena
 
-    MOV ESI, 0          ; contador (y total de caracteres)
+    MOV ESI, cadena          ; apuntador cadena
+    MOV EBX, 0               ; contador
 
-    MOV AL, cadena[ESI]
+    MOV AL, BYTE PTR [ESI]
 
     .WHILE AL != 0
         INC ESI
-        MOV AL, cadena[ESI]
+        INC EBX
+        MOV AL, BYTE PTR [ESI]
     .ENDW
-    
-    PUSH ESI
-    PUSH dirRet
+
+
+    PUSH EBX
+    PUSH dirRet1
 
     RET
 totalCaracteres ENDP
 
 imprimirCadena PROC
     POP dirRet2
-    POP cadenaImp
     POP lenCadena
+    POP cadenaImp
 
     MOV EDX, OFFSET txt1
     CALL WriteString
@@ -127,25 +130,32 @@ cuentaCaracteres PROC
     POP totCaracteres
     POP caracteres
 
-    MOV ESI, 0              ; apuntador cadena original
+    MOV ESI, txt                    ; apuntador cadena original
+    MOV EDX, 0
+    
+    ;.WHILE ESI < EDX
+    .WHILE EDX < lenTxt
+        MOV AL, BYTE PTR [ESI]
+        
+        MOV EDI, caracteres                   ; apuntador caracteres
+        MOV EBX, totCaracteres                ; apuntador arreglo totales
+        MOV ECX, 0                            ; contador
 
-    .WHILE ESI < lenTxt
-        MOV AL, txt[ESI]
-
-        MOV EDI, 0          ; apuntador caracteres
-        MOV ECX, 0          ; bandera para salir del while
-
-        .WHILE EDI < 4 && ECX == 0
-
-            .IF AL == caracteres[EDI]
-                INC totalCaracteres[EDI]        ; incremento el numero de ocurrencias del caracter
-                MOV ECX, 1
+        .WHILE ECX < 4
+   
+            .IF AL == BYTE PTR [EDI]
+                ADD SDWORD PTR [EBX], 1          ; incremento el numero de ocurrencias del caracter
+                .BREAK
             .ENDIF
 
             INC EDI             ; cambio de caracter a comparar
+            ADD EBX, 4
+
+            INC ECX             ; aumento contador
         .ENDW
 
         INC ESI                 ; me muevo en la cadena
+        INC EDX
     .ENDW
 
     PUSH dirRet3
@@ -159,23 +169,32 @@ imprimirTotal PROC
 
     MOV EDX, OFFSET txtHeader
     CALL WriteString
+    CALL CrLf
 
-    MOV ESI, 0
+    MOV ESI, carac
+    MOV EDI, totales
 
-    .WHILE ESI < 4
+    MOV EBX, 0
 
-        MOV AL, carac[ESI]
+    .WHILE EBX < 4
+        MOV EDX, OFFSET txtEspacio
+        CALL WriteString
+
+        MOV AL, BYTE PTR [ESI]
         CALL WriteChar
 
         MOV EDX, OFFSET txtEspacio
         CALL WriteString
 
-        MOV EAX, totales[ESI]
+        MOV EAX, SDWORD PTR [EDI]
         CALL WriteInt
 
         CALL CrLf
 
-        INC ESI
+        ADD ESI, 1
+        ADD EDI, 4
+
+        INC EBX
     
     .ENDW
 

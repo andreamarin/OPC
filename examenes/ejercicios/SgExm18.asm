@@ -43,7 +43,7 @@ txtVal BYTE " con valor: ", 0
 .CODE 
 
 main PROC
-    CALL ID
+    CALL ProcId
 
     ; Contar Indices
     PUSH OFFSET arrInd
@@ -70,10 +70,13 @@ main PROC
     CALL WriteInt
     CALL CrLf
 
-    PUSH arrInd
+    CALL CrLf
+
+    ; Imprimir arreglo
+    PUSH OFFSET arrInd
     PUSH totInd
-    PUSH arrPot
-    PUSh totPot
+    PUSH OFFSET arrPot
+    PUSH totPot
     CALL ImprimirArrD
 
     MOV EDX, OFFSET adios
@@ -82,25 +85,27 @@ main PROC
     EXIT
 main ENDP
 
-ID PROC
+ProcId PROC
     MOV EDX, OFFSET id
     CALL WriteString
     CALL CrLf
 
     RET
-ID ENDP
+ProcId ENDP
 
 CtaElemArrD PROC
     POP dirRet
-    POP arrD
     POP sigElem
+    POP arrD
 
     MOV ESI, arrD
     MOV ECX, 0
 
+    MOV EAX, sigElem
+
     .WHILE ESI < sigElem
         INC ECX
-        INC DWORD PTR ESI
+        ADD ESI, TYPE DWORD
     .ENDW
 
     PUSH ECX
@@ -110,39 +115,47 @@ CtaElemArrD ENDP
 
 ImprimirArrD PROC
     POP dirRet2
-    POP indices
-    POP lenIndices
-    POP arr
     POP lenArr
+    POP arr
+    POP lenIndices
+    POP indices
 
-    MOV ESI, 0                                  ; apuntador arreglo indices
+    MOV ESI, indices                            ; apuntador arreglo indices
+    MOV EBX, 0                                  ; contador
 
-    .WHILE ESI < lenIndices
-        MOV EDI, indices[ESI*TYPE DWORD]       ; obtener indice
-
-        .IF EDI < lenArr                        ; checar que indice sea menor a la longitud
+    
+    .WHILE EBX < lenIndices
+        MOV EAX, DWORD PTR [ESI]                ; obtener indice
+        
+        .IF EAX < lenArr                        ; checar que indice sea menor a la longitud
             MOV EDX, OFFSET txtPos
             CALL WriteString
 
-            MOV EAX, EDI                        ; imprimir indice
+            ;MOV EAX, ECX                        ; imprimir indice
             CALL WriteInt
 
             MOV EDX, OFFSET txtVal
             CALL WriteString
 
-            MOV EAX, arr[EDI*TYPE DWORD]       ; obtener el valor del arreglo en el índice dado
+            MOV ECX, 4
+            MUL ECX                              ; calcular indice del arreglo de potencias
+            MOV EDI, arr
+            ADD EDI, EAX
+
+            MOV EAX, [EDI]                      ; obtener el valor del arreglo en el índice dado
             CALL WriteInt
 
             CALL CrLf
 
         .ENDIF
 
-        INC ESI
+        ADD ESI, 4
+        INC EBX
     .ENDW
 
     PUSH dirRet2
     RET
-ImprimirArrD PROC
+ImprimirArrD ENDP
 
 END main
 

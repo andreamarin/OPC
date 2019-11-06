@@ -11,16 +11,16 @@ myNull=0
 
 .DATA 
 ; variables del main
-DiezStr DWORD "on1on", myNull
-        DWORD "tw2tw", myNull
-        DWORD "th3th", myNull 
-        DWORD "fo4fo", myNull 
-        DWORD "fi5fi", myNull
-        DWORD "si6si", myNull
-        DWORD "se7se", myNull
-        DWORD "ei8ei", myNull
-        DWORD "ni9ni", myNull
-        DWORD "teAte", myNull
+DiezStr BYTE "on1on", myNull
+        BYTE "tw2tw", myNull
+        BYTE "th3th", myNull 
+        BYTE "fo4fo", myNull 
+        BYTE "fi5fi", myNull
+        BYTE "si6si", myNull
+        BYTE "se7se", myNull
+        BYTE "ei8ei", myNull
+        BYTE "ni9ni", myNull
+        BYTE "teAte", myNull
 N SDWORD 10
 T SDWORD ?
 
@@ -42,14 +42,14 @@ main PROC
     CALL CrLf
 
     ; Calcular longitud cadena
-    MOV ESI, OFFSET DiezStr
+    MOV ESI, 0;OFFSET DiezStr
     MOV ECX, 0
 
-    MOV AL, [ESI]
+    MOV AL, DiezStr[ESI]
     .WHILE AL != 0
         INC ECX
         ADD ESI, TYPE BYTE
-        MOV AL, [ESI]
+        MOV AL, DiezStr[ESI]
     .ENDW
     
     MOV T, ECX
@@ -64,6 +64,7 @@ main PROC
     ; Imprimir cadenas
     MOV EDX, OFFSET txtLista
     CALL WriteString
+    CALL CrLf
 
     MOV EBX, 0
     MOV ESI, OFFSET DiezStr

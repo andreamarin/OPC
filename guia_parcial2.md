@@ -54,3 +54,70 @@ END main
 
 * **LENGTHOF** = # de elementos
 * **SIZEOF** = # bytes
+
+#### Tipos de Direccionamiento Indirecto
+
+* Operando Indirecto: Es mejor para procedimientos!
+
+  ```assembly
+  .DATA
+  array SDWORD 2,3,5,6
+  
+  .CODE
+  MOV ESI, OFFSET array
+  
+  MOV EAX, [ESI]
+  ADD ESI, TYPE array				
+  ```
+
+* Operando Indexado
+
+  * Normal
+
+  * ```assembly
+    .DATA
+    array SDWORD 2,3,5,6
+    
+    .CODE
+    MOV ESI, 0										; indice = 0, 4, 8, ...
+    
+    MOV EAX array[ESI]						; opcion 1
+    ADD ESI, TYPE array
+    
+    MOV EAX [array + ESI]					; opcion 2
+    ```
+
+  * Escalado
+
+  * ```assembly
+    .DATA
+    array SDWORD 2,3,5,6
+    
+    .CODE
+    
+    
+    MOV ESI, OFFSET array						; dirección del arreglo
+    MOV EBX, 0											; indice = 0, 1, 2, 3, ...
+    
+    MOV EAX [ESI+EBX*TYPE array]
+    
+    INC EBX													; aumento indice
+    ```
+
+  * Desplazamiento
+
+    ```assembly
+    .DATA
+    array SDWORD 2,3,5,6
+    
+    .CODE
+    
+    MOV ESI, OFFSET array						; dirección del arreglo
+    MOV EBX, 0											; indice = 0, 4, 8, ...
+    
+    MOV EAX [ESI+EBX]
+    
+    ADD EBX, TYPE array
+    ```
+
+    

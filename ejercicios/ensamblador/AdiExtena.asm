@@ -30,7 +30,10 @@ main PROC
 	call	AdicionExtendida
 
 ; Despliega la suma.
-	
+
+      PUSH LENGTHOF suma  	
+      PUSH OFFSET suma
+            
 	call	DespliegaSuma
 	call Crlf
 	
@@ -51,16 +54,25 @@ AdicionExtendida PROC
 ;--------------------------------------------------------
 	POP dirRet
 	POP ESI						; apuntador op1
-	POP EDI 					; apuntador op2
+	POP EDI 					      ; apuntador op2
 	POP ECX						; longitud operandos
 	POP EBX						; apuntador resultado
 
+      ;CLC
+      
 	MOV EDX, 0
 
 	.WHILE EDX < ECX
-		MOV EAX, [ESI]
-		ADC EAX, [EDI]
-		MOV [EBX], EAX
+
+            ;MOV EAX, 0
+		MOV AL, BYTE PTR [ESI]
+
+            .IF EDX == 0
+                ADD AL, BYTE PTR [EDI]
+            .ELSE
+		  ADC AL, BYTE PTR [EDI]
+            .ENDIF
+		MOV BYTE PTR [EBX], AL
 
 		INC EBX
 		INC ESI
@@ -68,13 +80,26 @@ AdicionExtendida PROC
 		INC EDX
 	.ENDW
 
-	MOV EAX, 0
-	ADC EAX, 0
-	MOV [EBX], EAX
+      ;MOV EAX, OFFSET dirRet
+      ;CALL WriteHex
+
+      ;CALL CrLf
+
+      ;MOV EAX, EBX
+      ;CALL WriteHex
+
+      ;PUSH dirRet
+
+	MOV AL, 0
+	ADC AL, 0
+	MOV BYTE PTR [EBX], AL
+
+      CALL WriteHexB
+      
 
 	PUSH dirRet
 
-	ret
+	RET
 AdicionExtendida ENDP
 
 ;-----------------------------------------------------------
@@ -95,15 +120,17 @@ DespliegaSuma PROC
 	POP ESI					; apuntador resultado a imprimir
 	POP ECX					; longitud del arreglo
 
-	MOV EBX, ESI
-	ADD EBX, ECX
-	DEC EBX
+	MOV EDX, ESI
+	ADD EDX, ECX
+	DEC EDX
 
-	;MOV EDX, 1	
-
-	.WHILE EBX >= ESI
-		MOV EAX, DWORD PTR [EBX]	
-		SUB EBX, TYPE DWORD
+      CALL CrLf
+      MOV EBX, 1
+        	
+	.WHILE EDX >= ESI
+		MOV AL, BYTE PTR [EDX]
+            CALL WriteHexB	
+		SUB EDX, 1
 	.ENDW
 
 	PUSH dirRet2
